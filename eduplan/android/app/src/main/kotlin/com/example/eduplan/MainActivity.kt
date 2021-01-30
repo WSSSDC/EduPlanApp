@@ -1,4 +1,4 @@
-package com.example.eduplan
+package tech.eduplan
 
 import io.flutter.embedding.android.FlutterActivity
 
