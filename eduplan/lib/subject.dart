@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'event.dart';
 import 'student.dart';
 
 class Subject {
@@ -7,13 +8,14 @@ class Subject {
   String title = "";
   List<String> studentRefs = [];
   List<Student> students = [];
+  List<Event> events = [];
 
   Subject.data(DocumentSnapshot data) {
     this.id = data.id;
     this.title = data.data()['title'];
-    this.studentRefs = data.data()['students'];
+    this.studentRefs = List<String>.from(data.data()['students']);
     _getStudents();
-    //TODO: Conv list of student refs (Strings) to student objects
+    _getEvents(data);
   }
 
   _getStudents() async {
@@ -27,5 +29,15 @@ class Subject {
         .doc(docid)
         .get()
         .then((data) => Student.data(data));
+  }
+
+  Future<void> _getEvents(DocumentSnapshot data) {
+    return _instance.collection("subjects").doc(id).collection('events')
+    .get()
+    .then((QuerySnapshot data) {
+      data.docs.forEach((e) {
+        this.events.add(Event.data(e));
+      });
+    });
   }
 }
