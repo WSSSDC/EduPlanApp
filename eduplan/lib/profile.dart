@@ -1,17 +1,35 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+import 'userdata.dart';
 
-class UserData {
-  static FirebaseFirestore _instance = FirebaseFirestore.instance;
-  static String id = "5OQbxtjwz8nn3KLMpFRG";
-  static String first = "";
-  static String last = "";
-  static String email = "";
+class Profile extends StatefulWidget {
+  @override
+  _ProfileState createState() => _ProfileState();
+}
 
-  getData() {
-    _instance.collection("users").doc(id).get().then((data){
-      UserData.first = data['name']['first'];
-      UserData.last = data['name']['last'];
-      UserData.email = data['name']['email'];
-    });
+class _ProfileState extends State<Profile> {
+
+  @override
+  void initState() {
+    loadData();
+    super.initState();
+  }
+
+  loadData() async {
+    await UserData.getData();
+    setState(() => UserData);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(UserData.first + " " + UserData.last),
+      ),
+      body: Column(
+        children: [
+          Text(UserData.first),
+        ],
+      ),
+    );
   }
 }

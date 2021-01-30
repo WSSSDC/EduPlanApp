@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'profile.dart';
+import 'calendar.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -7,6 +7,7 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,13 +21,13 @@ class _LoginState extends State<Login> {
             MaterialButton(
               child: Text("Login"),
               onPressed: () {
-                /*Navigator.of(context).push(
+                Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (context) {
-                      return Profile();
+                      return Calendar();
                     }
                   )
-                );*/
+                );
               }
             )
           ],
