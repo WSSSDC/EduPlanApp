@@ -11,22 +11,29 @@ class UserData {
   static List<Subject> subjects = [];
 
   static Future<void> getData() {
-    return _instance.collection("users").doc(id).get().then((DocumentSnapshot data){
+    return _instance.collection("users").doc(id).get().then((DocumentSnapshot data) async {
       UserData.first = data['name']['first'];
       UserData.last = data['name']['last'];
       UserData.email = data['name']['email'];
-      UserData.subjectRefs = data['subjects'];
-      _getSubjects();
+      UserData.subjectRefs = List<String>.from(data['subjects']);
+      await _getSubjects();
     });
   }
 
-  static _getSubjects() async {
+  static Future<void> _getSubjects() async {
     UserData.subjects = await Future.wait(subjectRefs.map((e) async => await _getSubject(e)));
+    print(subjects.map((e) => e.title));
+    /*for(int i = 0; i < subjectRefs.length; i++) {
+      Subject s = Subject.data(await _getSubject(subjectRefs[i]));
+      subjects.add(s);
+    }
+  }*/
   }
 
   static Future<Subject> _getSubject(String docid) async {
-    return _instance.collection("subjects").doc(docid).get().then((data) => 
-      Subject.data(data)
+    return _instance.collection("subjects").doc(docid).get().then((data){ 
+        return Subject.data(data);
+      }
     );
   }
 }

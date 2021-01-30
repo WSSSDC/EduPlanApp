@@ -10,7 +10,7 @@ class Subject {
   Subject.data(DocumentSnapshot data) {
     this.id = data.id;
     this.title = data.data()['title'];
-    this.studentRefs = data.data()['students'];
+    this.studentRefs = List<String>.from(data.data()['students']);
 
     //TODO: Conv list of student refs (Strings) to student objects
   }
