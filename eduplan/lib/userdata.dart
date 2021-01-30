@@ -22,12 +22,6 @@ class UserData {
 
   static Future<void> _getSubjects() async {
     UserData.subjects = await Future.wait(subjectRefs.map((e) async => await _getSubject(e)));
-    print(subjects.map((e) => e.title));
-    /*for(int i = 0; i < subjectRefs.length; i++) {
-      Subject s = Subject.data(await _getSubject(subjectRefs[i]));
-      subjects.add(s);
-    }
-  }*/
   }
 
   static Future<Subject> _getSubject(String docid) async {
