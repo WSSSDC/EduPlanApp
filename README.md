@@ -39,5 +39,5 @@ Our software would allow teachers to collaborate in giving out tests and assignm
 * Google cloud
 * Visual Studio Code
 
-Try it out
+Try it out: https://www.eduplan.tech/
 
