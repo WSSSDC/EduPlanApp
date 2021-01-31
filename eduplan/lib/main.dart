@@ -22,7 +22,7 @@ class Main extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'EduPlan',
       theme: ThemeData(
-        canvasColor: Color.fromRGBO(200, 220, 255, 1),//Color.fromRGBO(156, 205, 255, 1),
+        //canvasColor: Color.fromRGBO(200, 220, 255, 1),//Color.fromRGBO(156, 205, 255, 1),
         primarySwatch: Colors.blue,
         
       ),
