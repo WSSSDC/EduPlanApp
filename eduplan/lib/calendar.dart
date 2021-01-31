@@ -70,7 +70,7 @@ class _CalendarState extends State<Calendar>{
       child: Row(
         children: [
           SizedBox(
-            width: 250,
+            width: 350,
             child: Container(
               //color: Colors.black54,
               child: Column(
@@ -148,6 +148,12 @@ class _CalendarState extends State<Calendar>{
               locale: 'en_US',
               headerVisible: false,
               calendarStyle: CalendarStyle(
+                holidayStyle: TextStyle(
+                  color: Colors.black
+                ),
+                weekdayStyle: TextStyle(
+                  color: Colors.black
+                ),
                 todayColor: Colors.transparent,
                 selectedColor: Colors.black87,
                 todayStyle: TextStyle(
