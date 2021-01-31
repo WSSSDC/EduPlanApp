@@ -11,6 +11,12 @@ class Subject {
   List<Student> students = [];
   List<Event> events = [];
 
+  Subject.create(id, title, courseCode){
+    this.id = id;
+    this.title = title;
+    this.courseCode = courseCode;
+  }
+
   Subject.data(DocumentSnapshot data) {
     this.id = data.id;
     this.title = data.data()['title'];
@@ -44,6 +50,10 @@ class Subject {
   }
 
   Future<void> setSubject() {
-    //return _instance.collection("subjects").doc(id)
+    return _instance.collection("subjects").doc(id).set({
+      'title': title,
+      'courseCode': courseCode,
+      'students': studentRefs
+    });
   }
 }

@@ -212,6 +212,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.5"
+  random_string:
+    dependency: "direct main"
+    description:
+      name: random_string
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.1.0"
   simple_gesture_detector:
     dependency: transitive
     description:
@@ -252,8 +259,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.0-nullsafety.1"
-<<<<<<< HEAD
-=======
   table_calendar:
     dependency: "direct main"
     description:
@@ -261,7 +266,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.3.3"
->>>>>>> 89ce69d8149c515cd8b536589bd3b1aad0d81195
   term_glyph:
     dependency: transitive
     description:
@@ -292,8 +296,4 @@ packages:
     version: "2.1.0-nullsafety.3"
 sdks:
   dart: ">=2.10.0-110 <=2.11.0-213.1.beta"
-<<<<<<< HEAD
-  flutter: ">=1.12.13+hotfix.5 <2.0.0"
-=======
   flutter: ">=1.17.0 <2.0.0"
->>>>>>> 89ce69d8149c515cd8b536589bd3b1aad0d81195
