@@ -173,7 +173,7 @@ class _CalendarState extends State<Calendar>{
                       children.add(
                         Positioned(
                           right: i * 20.0,
-                          bottom: 5,
+                          bottom: 10,
                           child: Icon(Icons.circle, color: Colors.red, size: 20),
                         )
                       );
