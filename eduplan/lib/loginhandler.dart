@@ -27,6 +27,7 @@ class LoginHandler {
     UserCredential userCredential = await _firebaseAuth.signInWithCredential(credential);
     _credential = userCredential.user;
     UserData.id = _credential.uid;
+    await UserData.getData();
     await UserData.setData();
   }
 

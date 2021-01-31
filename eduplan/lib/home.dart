@@ -24,9 +24,14 @@ class _HomeState extends State<Home> {
 
   @override
   void initState() {
-    UserData.id = _auth.currentUser.uid;
-    UserData.getData();
+    setupData();
     super.initState();
+  }
+
+  setupData() async {
+    UserData.id = _auth.currentUser.uid;
+    await UserData.getData();
+    setState(() {});
   }
 
   @override
@@ -91,6 +96,7 @@ class _HomeState extends State<Home> {
                       }
                     ),
                   ),
+                  Container(height: 140)
                 ],
               ),
             ),

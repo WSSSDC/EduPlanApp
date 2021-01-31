@@ -6,6 +6,9 @@ import 'calendarData.dart';
 import 'package:intl/intl.dart';
 import 'event.dart';
 
+List _selectedEvents = [];
+List _selectedHolidays = [];
+
 class Calendar extends StatefulWidget {
   @override
   _CalendarState createState() => _CalendarState();
@@ -13,7 +16,6 @@ class Calendar extends StatefulWidget {
 
 class _CalendarState extends State<Calendar>{
   CalendarController _calendarController;
-  List _selectedEvents = [];
   String _currentMonth = DateFormat("MMMM").format(DateTime.now());
   Event _event = new Event.create("", "", false, 0, DateTime.now());
 
@@ -33,13 +35,20 @@ class _CalendarState extends State<Calendar>{
 
   setupHolidays() async {
     await CalendarData.getHolidays();
-    _selectedEvents = CalendarData.holidays[CalendarData.stripTime(DateTime.now())] ?? [];
+    _selectedHolidays = CalendarData.holidays[CalendarData.stripTime(DateTime.now())] ?? [];
     setState(() {});
   }
 
-  _onDaySelected(DateTime day, List events, _) {
+  _onDaySelected(DateTime day, List events, List holidays) {
     _event.date = day;
-    setState(() => _selectedEvents = events);
+    setState((){
+      _selectedEvents = events;
+      _selectedHolidays = holidays;
+    });
+  }
+
+  void update() {
+
   }
 
   void _createEvent(context) {
@@ -66,7 +75,7 @@ class _CalendarState extends State<Calendar>{
               //color: Colors.black54,
               child: Column(
                 children: [
-                  Container(height: 25),
+                  Container(height: 40),
                   Row(
                     children: [
                       MaterialButton(
@@ -80,30 +89,32 @@ class _CalendarState extends State<Calendar>{
                   ),
                   Expanded(
                     child: ListView(
-                      children: List<Widget>.from(
-                        _selectedEvents.map((e) => ListTile(
-                          title: Text(e),
-                          trailing: UserData.isStudent ? null : MaterialButton(
-                            child: Icon(Icons.delete),
-                            onPressed: () async {
-                              UserData.subjects.forEach((s) {
-                                if(s.events.where((eve) => eve.title == e).isNotEmpty)
-                                s.events.where((eve) => eve.title == e).first.deleteEvent(s.id);
-                              });
-                              setState(() {
-                                _selectedEvents.remove(e);
-                                CalendarData.events[CalendarData.stripTime(DateTime.now())].remove(e);
-                              });
-                            },
-                          ),
-                        )
+                      children: 
+                      List<Widget>.from(_selectedEvents.map((e) => 
+                      ListTile(
+                        title: Text(e),
+                        trailing: MaterialButton(
+                          child: Icon(Icons.delete),
+                          onPressed: () async {
+                            setState(() {
+                              _selectedEvents.remove(e);
+                              CalendarData.events[CalendarData.stripTime(DateTime.now())].remove(e);
+                            });
+                          },
+                        ),
+                      )
                       ).toList())
-                      + (UserData.isStudent ? [] : [
+                      + (UserData.isStudent ? [] : <Widget>[
                         MaterialButton(
                           child: Icon(Icons.add),
                           onPressed: () => _createEvent(context),
                         )
-                      ]),
+                      ] +
+                      List<Widget>.from(_selectedHolidays.map((e) => 
+                      ListTile(
+                        title: Text(e),
+                      )
+                      ).toList())),
                     ),
                   ),
                   Padding(
@@ -136,7 +147,7 @@ class _CalendarState extends State<Calendar>{
               locale: 'en_US',
               headerVisible: false,
               calendarStyle: CalendarStyle(
-                todayColor: Color.fromRGBO(249, 249, 249, 1),
+                todayColor: Colors.transparent,
                 selectedColor: Colors.black87,
                 todayStyle: TextStyle(
                   fontWeight: FontWeight.bold,
@@ -153,40 +164,15 @@ class _CalendarState extends State<Calendar>{
                 markersBuilder: (context, date, events, holidays) {
                   final children = <Widget>[];
                   if(events.isNotEmpty) {
-                    /*children.add(
-                      Positioned(
-                        right: 1,
-                        bottom: 125,
-                        child: Stack(
-                          children: [
-                            Icon(Icons.circle, color: Colors.red, size: 30,),
-                            Positioned(
-                              child: Text(events.length.toString()),
-                              left: 11,
-                              top: 6,
-                            )
-                          ]
-                        ),
-                      )
-                    );*/
-                    for(int i = 0; i < events.length; i++) {
+                    for(int i = 0; i < events.length + holidays.length; i++) {
                       children.add(
                         Positioned(
                           right: i * 20.0,
                           bottom: 10,
-                          child: Icon(Icons.circle, color: Colors.red, size: 20),
+                          child: Icon(Icons.circle, color: (i < holidays.length ? Colors.red : Colors.blue), size: 20),
                         )
                       );
                     }
-                  }
-                  if(holidays.isNotEmpty) {
-                    children.add(
-                      Positioned(
-                        right: 1,
-                        bottom: 1,
-                        child: Icon(Icons.circle),
-                      )
-                    );
                   }
                   return children;
                 },
@@ -283,3 +269,43 @@ class _CreateEventAlertState extends State<CreateEventAlert> {
     );
   }
 }
+
+
+/*
+class HomeworkTile extends StatefulWidget {
+  HomeworkTile(this.e, this.notify, this.isHoliday);
+  final String e;
+  final Function notify;
+  final bool isHoliday;
+
+  @override
+  _HomeworkTileState createState() => _HomeworkTileState(e, notify, isHoliday);
+}
+
+class _HomeworkTileState extends State<HomeworkTile> {
+  _HomeworkTileState(this.e, this.notify, this.isHoliday);
+  final String e;
+  final Function notify;
+  final bool isHoliday;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      title: Text(e),
+      trailing: (UserData.isStudent || this.isHoliday) ? null : MaterialButton(
+        child: Icon(Icons.delete),
+        onPressed: () async {
+          /*UserData.subjects.forEach((s) {
+            if(s.events.where((eve) => (eve.title + " - " + s.courseCode) == e).isNotEmpty)
+            s.events.where((eve) => (eve.title + " - " + s.courseCode) == e).first.deleteEvent(s.id);
+          });*/
+          setState(() {
+            _selectedEvents.remove(e);
+            CalendarData.events[CalendarData.stripTime(DateTime.now())].remove(e);
+          });
+          this.widget.notify();
+        },
+      ),
+    );
+  }
+}*/

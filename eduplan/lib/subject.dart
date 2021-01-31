@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'event.dart';
 import 'student.dart';
+import 'userdata.dart';
 
 class Subject {
   static FirebaseFirestore _instance = FirebaseFirestore.instance;
@@ -25,6 +26,8 @@ class Subject {
     this.courseCode = data.data()['courseCode'];
     this.studentRefs = List<String>.from(data.data()['students'] ?? []);
     this.subsubjectRefs = List<String>.from(data.data()['subjects'] ?? []);
+    
+    if(!UserData.isStudent)
     _getSubSubjects();
     _getStudents();
     _getEvents(data);
@@ -61,24 +64,29 @@ class Subject {
     });
   }
 
-  Future _getSubSubjects() {
-    this.subsubjectRefs.forEach((element) {
-        return _instance.collection("subjects").doc(element)
-        .get()
-        .then((DocumentSnapshot data) {
-          subsubjects.add(SubSubject.data(data));
-        });
-     });
+  Future<void> _getSubSubjects() async {
+    subsubjects = await Future.wait(subsubjectRefs.map((e) async => await _getSubSubject(e)));
+  }
+
+  Future<SubSubject> _getSubSubject(String docid) async {
+    return _instance.collection("subjects").doc(docid).get().then((data){ 
+        return SubSubject.data(data);
+      }
+    );
   }
 }
 
 class SubSubject{
   String id;
-  List<Event> events;
+  String title = "";
+  String courseCode = "";
+  List<Event> events = [];
   static FirebaseFirestore _instance = FirebaseFirestore.instance;
 
   SubSubject.data(DocumentSnapshot data){
     this.id = data.id;
+    this.title = data.data()['title'];
+    this.courseCode = data.data()['courseCode'];
     _getEvents(data);
   }
 

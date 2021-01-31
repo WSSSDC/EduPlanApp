@@ -13,12 +13,14 @@ class UserData {
 
   static Future<void> getData() {
     return _instance.collection("users").doc(id).get().then((DocumentSnapshot data) async {
-      UserData.first = data['name']['first'] ?? "";
-      UserData.last = data['name']['last'] ?? "";
-      UserData.email = data['name']['email'] ?? "";
-      UserData.isStudent = data['isStudent'] ?? true;
-      UserData.subjectRefs = List<String>.from(data['subjects']);
-      await _getSubjects();
+      if(data.exists){
+        UserData.first = data['name']['first'] ?? "";
+        UserData.last = data['name']['last'] ?? "";
+        UserData.email = data['name']['email'] ?? "";
+        UserData.isStudent = data['isStudent'] ?? true;
+        UserData.subjectRefs = List<String>.from(data['subjects']);
+        await _getSubjects();
+      }
     });
   }
 
@@ -38,7 +40,7 @@ class UserData {
     _instance.collection("users").doc(id).set({
       'email': email,
     }, SetOptions(merge:true));
-    
+
     return _instance.collection("users").doc(id).set({
       'name': {
         'first': first,

@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 import 'userdata.dart';
 import 'subject.dart';
 import 'package:intl/intl.dart';
@@ -35,7 +33,7 @@ class CalendarData {
       s.subsubjects.forEach((element) {
         element.events.forEach((e) {
           DateTime _date = stripTime(e.date);
-          String _title = e.title;
+          String _title = e.title + " - " + element.courseCode;
           if(!e.isTest)
           _title += " - " + e.compTime.toString() + " min";
           if (holidays.containsKey(_date)) {
