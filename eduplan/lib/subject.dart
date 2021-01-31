@@ -42,4 +42,8 @@ class Subject {
       });
     });
   }
+
+  Future<void> setSubject() {
+    //return _instance.collection("subjects").doc(id)
+  }
 }

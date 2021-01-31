@@ -1,6 +1,7 @@
-import 'package:eduplan/subject.dart';
 import 'package:flutter/material.dart';
 import 'userdata.dart';
+import 'studentProfile.dart';
+import 'teacherProfile.dart';
 
 class Profile extends StatefulWidget {
   @override
@@ -8,7 +9,6 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
-
   @override
   void initState() {
     loadData();
@@ -19,20 +19,14 @@ class _ProfileState extends State<Profile> {
     await UserData.getData();
     setState(() => UserData);
   }
-
+ 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(UserData.first + " " + UserData.last),
       ),
-      body: ListView(
-        children: UserData.subjects.isEmpty ? <Widget>[Text("No Classes")] : UserData.subjects.map((e) {
-          return ListTile(
-            title: Text(e.title)
-          );
-        }).toList()
-      ),
+      body: UserData.isStudent ? StudentProfile() : TeacherProfile()
     );
   }
 }

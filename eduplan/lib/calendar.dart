@@ -41,7 +41,17 @@ class _CalendarState extends State<Calendar> {
             child: Column(
               children: [
                 Container(height: 25),
-                Text("Work", style: TextStyle(fontSize: 32)),
+                Row(
+                  children: [
+                    MaterialButton(
+                      child: Icon(Icons.arrow_back_ios),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                    Text("Work", style: TextStyle(fontSize: 32)),
+                  ],
+                ),
                 Expanded(
                   child: ListView(
                     children: _selectedEvents.map((e) => ListTile(title: Text(e))).toList(),

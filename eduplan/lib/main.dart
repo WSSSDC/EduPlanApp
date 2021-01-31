@@ -1,33 +1,30 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'home.dart';
+import 'login.dart';
+
 
 void main() {
-  
   WidgetsFlutterBinding.ensureInitialized();
-  initializeDateFormatting().then((_) => runApp(Main()));
+  initializeDateFormatting().then((_) => 
+  Firebase.initializeApp().then((_) =>
+  runApp(Main())));
 }
 
 class Main extends StatelessWidget {
-  final Future<FirebaseApp> _initialization = Firebase.initializeApp();
+  final _auth = FirebaseAuth.instance;
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: _initialization,
-      builder: (context, snapshot) {
-        if(snapshot.connectionState == ConnectionState.done)
-        return MaterialApp(
-          debugShowCheckedModeBanner: false,
-          title: 'EduPlan',
-          theme: ThemeData(
-            primarySwatch: Colors.blue,
-          ),
-          home: Home(),
-        );
-        return CircularProgressIndicator();
-      },
+   return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'EduPlan',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: _auth.currentUser != null ? Home() : Login(),
     );
   }
 }
