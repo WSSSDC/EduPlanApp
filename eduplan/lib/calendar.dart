@@ -92,8 +92,9 @@ class _CalendarState extends State<Calendar>{
                       children: 
                       List<Widget>.from(_selectedEvents.map((e) => 
                       ListTile(
+                        leading: Icon(Icons.circle, color: Colors.blue, size: 20),
                         title: Text(e),
-                        trailing: MaterialButton(
+                        trailing: (UserData.isStudent) ? null : MaterialButton(
                           child: Icon(Icons.delete),
                           onPressed: () async {
                             setState(() {
@@ -112,8 +113,8 @@ class _CalendarState extends State<Calendar>{
                       ] +
                       List<Widget>.from(_selectedHolidays.map((e) => 
                       ListTile(
-                        title: Text(e),
-                      )
+                        leading: Icon(Icons.circle, color: Colors.red, size: 20),
+                        title: Text(e))
                       ).toList())),
                     ),
                   ),
