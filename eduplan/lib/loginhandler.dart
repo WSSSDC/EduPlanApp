@@ -1,19 +1,42 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'userdata.dart';
 
-Future<UserCredential> signInWithGoogle() async {
-  // Trigger the authentication flow
-  final GoogleSignInAccount googleUser = await GoogleSignIn().signIn();
+class LoginHandler {
+  static FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  static GoogleSignIn _googleSignIn;
+  static User _credential;
 
-  // Obtain the auth details from the request
-  final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+  static signInWithGoogle() async {
+    _googleSignIn = GoogleSignIn();
+    final GoogleSignInAccount googleSignInAccount = await _googleSignIn.signIn();
+    final GoogleSignInAuthentication googleSignInAuthentication = await googleSignInAccount.authentication;
 
-  // Create a new credential
-  final GoogleAuthCredential credential = GoogleAuthProvider.credential(
-    accessToken: googleAuth.accessToken,
-    idToken: googleAuth.idToken,
-  );
+    List<String> _name = googleSignInAccount.displayName.split(' ');
+    UserData.first = _name[0];
+    UserData.last = _name[1];
+    //photoURL = googleSignInAccount.photoUrl;
+    UserData.email = googleSignInAccount.email;
 
-  // Once signed in, return the UserCredential
-  return await FirebaseAuth.instance.signInWithCredential(credential);
+    final AuthCredential credential = GoogleAuthProvider.credential(
+      accessToken: googleSignInAuthentication.accessToken,
+      idToken: googleSignInAuthentication.idToken,
+    );
+
+    UserCredential userCredential = await _firebaseAuth.signInWithCredential(credential);
+    _credential = userCredential.user;
+    UserData.id = _credential.uid;
+    await UserData.setData();
+  }
+
+  static signOut() async {
+    UserData.first = "";
+    UserData.last = "";
+    UserData.email = "";
+    UserData.subjectRefs = [];
+    UserData.subjects = [];
+    await _firebaseAuth.signOut();
+  }
 }
+
