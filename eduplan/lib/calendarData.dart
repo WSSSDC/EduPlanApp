@@ -13,6 +13,7 @@ class CalendarData {
   }
 
   static getEvents() {
+    events = {};
     UserData.subjects.forEach((Subject s) {
       s.events.forEach((e) {
         DateTime _date = stripTime(e.date);
@@ -29,6 +30,7 @@ class CalendarData {
   }
 
   static getHolidays() {
+    holidays = {};
     UserData.subjects.forEach((Subject s) {
       s.subsubjects.forEach((element) {
         element.events.forEach((e) {

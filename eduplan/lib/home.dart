@@ -14,7 +14,12 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   FirebaseAuth _auth = FirebaseAuth.instance;
   TextStyle _style = TextStyle(
-    fontSize: 32
+    fontSize: 35
+  );
+  
+  TextStyle _title = TextStyle(
+    fontSize: 40,
+    fontWeight: FontWeight.w600
   );
 
   @override
@@ -34,52 +39,60 @@ class _HomeState extends State<Home> {
         child: Column(
           children: [
             Container(height: 25),
-            Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: MaterialButton(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text("Calendar", style: _style),
-                    Container(width: 10),
-                    Icon(Icons.calendar_today)
-                  ],
-                ),
-                onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) {
-                        return Calendar();
-                      }
-                    )
-                  );
-                }
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: MaterialButton(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text("Profile", style: _style),
-                    Container(width: 10),
-                    Icon(Icons.person)
-                  ],
-                ),
-                onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) {
-                        return Profile();
-                      }
-                    )
-                  );
-                }
-              ),
-            ),
+            Text("Hello " + UserData.first + ",",
+            style: _title.copyWith(fontSize: 30)),
+            Text("Welcome to the " + (UserData.isStudent ? "Student" : "Teacher") + " Dashboard",
+            style: _title),
             Expanded(
-              child: Container(),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: MaterialButton(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text("Calendar", style: _style),
+                          Container(width: 10),
+                          Icon(Icons.calendar_today)
+                        ],
+                      ),
+                      onPressed: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return Calendar();
+                            }
+                          )
+                        );
+                      }
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: MaterialButton(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text("Profile", style: _style),
+                          Container(width: 10),
+                          Icon(Icons.person)
+                        ],
+                      ),
+                      onPressed: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return Profile();
+                            }
+                          )
+                        );
+                      }
+                    ),
+                  ),
+                ],
+              ),
             ),
             MaterialButton(
               child: Text("Log Out"),

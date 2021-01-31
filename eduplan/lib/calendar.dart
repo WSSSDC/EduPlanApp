@@ -11,7 +11,7 @@ class Calendar extends StatefulWidget {
   _CalendarState createState() => _CalendarState();
 }
 
-class _CalendarState extends State<Calendar> {
+class _CalendarState extends State<Calendar>{
   CalendarController _calendarController;
   List _selectedEvents = [];
   String _currentMonth = DateFormat("MMMM").format(DateTime.now());
@@ -62,55 +62,66 @@ class _CalendarState extends State<Calendar> {
         children: [
           SizedBox(
             width: 250,
-            child: Column(
-              children: [
-                Container(height: 25),
-                Row(
-                  children: [
-                    MaterialButton(
-                      child: Icon(Icons.arrow_back_ios),
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                    ),
-                    Text("Work", style: TextStyle(fontSize: 32)),
-                  ],
-                ),
-                Expanded(
-                  child: ListView(
-                    children: List<Widget>.from(
-                      _selectedEvents.map((e) => ListTile(
-                        title: Text(e),
-                        trailing: UserData.isStudent ? null : MaterialButton(
-                          child: Icon(Icons.delete),
-                          onPressed: () async {
-                            UserData.subjects.forEach((s) {
-                              if(s.events.where((eve) => eve.title == e).isNotEmpty)
-                              s.events.where((eve) => eve.title == e).first.deleteEvent(s.id);
-                            });
-                            setState(() {
-                              _selectedEvents.remove(e);
-                              CalendarData.events[CalendarData.stripTime(DateTime.now())].remove(e);
-                            });
-                          },
-                        ),
-                      )
-                    ).toList())
-                    + (UserData.isStudent ? [] : [
+            child: Container(
+              //color: Colors.black54,
+              child: Column(
+                children: [
+                  Container(height: 25),
+                  Row(
+                    children: [
                       MaterialButton(
-                        child: Icon(Icons.add),
-                        onPressed: () => _createEvent(context),
-                      )
-                    ]),
+                        child: Icon(Icons.arrow_back_ios),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                      ),
+                      Text("Work", style: TextStyle(fontSize: 32)),
+                    ],
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Center(
-                    child: Text(_currentMonth, style: TextStyle(fontSize: 32))
+                  Expanded(
+                    child: ListView(
+                      children: List<Widget>.from(
+                        _selectedEvents.map((e) => ListTile(
+                          title: Text(e),
+                          trailing: UserData.isStudent ? null : MaterialButton(
+                            child: Icon(Icons.delete),
+                            onPressed: () async {
+                              UserData.subjects.forEach((s) {
+                                if(s.events.where((eve) => eve.title == e).isNotEmpty)
+                                s.events.where((eve) => eve.title == e).first.deleteEvent(s.id);
+                              });
+                              setState(() {
+                                _selectedEvents.remove(e);
+                                CalendarData.events[CalendarData.stripTime(DateTime.now())].remove(e);
+                              });
+                            },
+                          ),
+                        )
+                      ).toList())
+                      + (UserData.isStudent ? [] : [
+                        MaterialButton(
+                          child: Icon(Icons.add),
+                          onPressed: () => _createEvent(context),
+                        )
+                      ]),
+                    ),
                   ),
-                )
-              ],
+                  Padding(
+                    padding: const EdgeInsets.all(30.0),
+                    child: Center(
+                      child: Text(_currentMonth, style: TextStyle(fontSize: 32, color: Colors.black45))
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          SizedBox(
+            width: 3,
+            child: Expanded(
+              child: Container(
+                color: Colors.black26
+              )
             ),
           ),
           Expanded(
@@ -124,11 +135,25 @@ class _CalendarState extends State<Calendar> {
               }, 
               locale: 'en_US',
               headerVisible: false,
+              calendarStyle: CalendarStyle(
+                todayColor: Color.fromRGBO(249, 249, 249, 1),
+                selectedColor: Colors.black87,
+                todayStyle: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 32
+                ),
+                outsideDaysVisible: false,
+                contentDecoration: BoxDecoration(
+                  border: Border(
+                    bottom: BorderSide(width: 2.0, color: Colors.black26)
+                  )
+                )
+              ),
               builders: CalendarBuilders(
                 markersBuilder: (context, date, events, holidays) {
                   final children = <Widget>[];
                   if(events.isNotEmpty) {
-                    children.add(
+                    /*children.add(
                       Positioned(
                         right: 1,
                         bottom: 125,
@@ -143,7 +168,16 @@ class _CalendarState extends State<Calendar> {
                           ]
                         ),
                       )
-                    );
+                    );*/
+                    for(int i = 0; i < events.length; i++) {
+                      children.add(
+                        Positioned(
+                          right: i * 20.0,
+                          bottom: 5,
+                          child: Icon(Icons.circle, color: Colors.red, size: 20),
+                        )
+                      );
+                    }
                   }
                   if(holidays.isNotEmpty) {
                     children.add(
