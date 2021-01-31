@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'calendarData.dart';
+import 'package:intl/intl.dart';
 
 class Calendar extends StatefulWidget {
   @override
@@ -10,6 +11,7 @@ class Calendar extends StatefulWidget {
 class _CalendarState extends State<Calendar> {
   CalendarController _calendarController;
   List _selectedEvents = [];
+  String _currentMonth = DateFormat("MMMM").format(DateTime.now());
 
   @override
   void initState() {
@@ -45,10 +47,11 @@ class _CalendarState extends State<Calendar> {
                     children: _selectedEvents.map((e) => ListTile(title: Text(e))).toList(),
                   ),
                 ),
-                Row(
-                  children: [
-                    Text((_calendarController.focusedDay ?? DateTime.now()).month.toString())
-                  ],
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Center(
+                    child: Text(_currentMonth, style: TextStyle(fontSize: 32))
+                  ),
                 )
               ],
             ),
@@ -58,6 +61,9 @@ class _CalendarState extends State<Calendar> {
               events: CalendarData.events,
               calendarController: _calendarController,
               onDaySelected: _onDaySelected,
+              onVisibleDaysChanged: (DateTime first, DateTime last, _) {
+                setState(() => _currentMonth = DateFormat("MMMM").format(first.add(Duration(days: 7))));
+              }, 
               locale: 'en_US',
               headerVisible: false,
               builders: CalendarBuilders(
@@ -67,7 +73,7 @@ class _CalendarState extends State<Calendar> {
                     children.add(
                       Positioned(
                         right: 1,
-                        bottom: 1,
+                        bottom: 130,
                         child: Icon(Icons.circle),
                       )
                     );
