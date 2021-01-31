@@ -1,6 +1,5 @@
 import 'package:random_string/random_string.dart';
 import 'package:flutter/material.dart';
-import 'dart:math' show Random;
 import 'userdata.dart';
 import 'subject.dart';
 
@@ -104,7 +103,7 @@ class _TeacherProfileState extends State<TeacherProfile> {
             title: MaterialButton(
               child: Text("Create a class", style: TextStyle(
                 fontSize: 18
-              ),),
+              )),
               onPressed: () => _createClass(context)
             ),
           )

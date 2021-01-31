@@ -9,6 +9,8 @@ class Subject {
   String courseCode = "";
   List<String> studentRefs = [];
   List<Student> students = [];
+  List<String> subsubjectRefs = [];
+  List<SubSubject> subsubjects = [];
   List<Event> events = [];
 
   Subject.create(id, title, courseCode){
@@ -21,7 +23,9 @@ class Subject {
     this.id = data.id;
     this.title = data.data()['title'];
     this.courseCode = data.data()['courseCode'];
-    this.studentRefs = List<String>.from(data.data()['students']);
+    this.studentRefs = List<String>.from(data.data()['students'] ?? []);
+    this.subsubjectRefs = List<String>.from(data.data()['subjects'] ?? []);
+    _getSubSubjects();
     _getStudents();
     _getEvents(data);
   }
@@ -54,6 +58,37 @@ class Subject {
       'title': title,
       'courseCode': courseCode,
       'students': studentRefs
+    });
+  }
+
+  Future _getSubSubjects() {
+    this.subsubjectRefs.forEach((element) {
+        return _instance.collection("subjects").doc(element)
+        .get()
+        .then((DocumentSnapshot data) {
+          subsubjects.add(SubSubject.data(data));
+        });
+     });
+  }
+}
+
+class SubSubject{
+  String id;
+  List<Event> events;
+  static FirebaseFirestore _instance = FirebaseFirestore.instance;
+
+  SubSubject.data(DocumentSnapshot data){
+    this.id = data.id;
+    _getEvents(data);
+  }
+
+  Future<void> _getEvents(DocumentSnapshot data) {
+    return _instance.collection("subjects").doc(id).collection('events')
+    .get()
+    .then((QuerySnapshot data) {
+      data.docs.forEach((e) {
+        this.events.add(Event.data(e));
+      });
     });
   }
 }
