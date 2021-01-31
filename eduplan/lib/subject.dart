@@ -6,6 +6,7 @@ class Subject {
   static FirebaseFirestore _instance = FirebaseFirestore.instance;
   String id = "";
   String title = "";
+  String courseCode = "";
   List<String> studentRefs = [];
   List<Student> students = [];
   List<Event> events = [];
@@ -13,6 +14,7 @@ class Subject {
   Subject.data(DocumentSnapshot data) {
     this.id = data.id;
     this.title = data.data()['title'];
+    this.courseCode = data.data()['courseCode'];
     this.studentRefs = List<String>.from(data.data()['students']);
     _getStudents();
     _getEvents(data);
